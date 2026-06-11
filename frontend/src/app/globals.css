@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ── */
+:root {
+  --bg: #0B0D09;
+  --surface: #131710;
+  --card: #1B2016;
+  --border: #2D3526;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A3A59E;
+  --gold: #7E8F6A;
+  --gold-light: #9BB083;
+  --cream: #F4F0E6;
+}
+
+/* ── Base ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: var(--font-inter, 'Inter'), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography ── */
+h1, h2, h3 {
+  font-family: var(--font-playfair, 'Playfair Display'), Georgia, serif;
+  font-weight: 600;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--surface); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+/* ── Selection ── */
+::selection { background-color: var(--gold); color: #000; }
+
+/* ── Custom components ── */
+@layer components {
+  /* Buttons */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-black font-semibold text-sm tracking-wider uppercase transition-all duration-200 hover:bg-gold hover:text-black active:scale-95;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 border border-white text-white font-semibold text-sm tracking-wider uppercase transition-all duration-200 hover:bg-white hover:text-black active:scale-95;
+  }
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3 bg-gold text-black font-semibold text-sm tracking-wider uppercase transition-all duration-200 hover:bg-accent-light active:scale-95;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 text-text-secondary font-medium text-sm transition-all duration-200 hover:text-white;
+  }
+
+  /* Cards */
+  .card-dark {
+    @apply bg-card border border-border rounded-none;
+  }
+
+  /* Input */
+  .input-dark {
+    @apply w-full bg-surface border border-border text-white placeholder:text-text-secondary px-4 py-3 text-sm focus:outline-none focus:border-gold transition-colors duration-200;
+  }
+
+  /* Section */
+  .section-pad {
+    @apply py-16 md:py-24;
+  }
+  .container-za {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Gold text */
+  .text-gold { color: var(--gold); }
+
+  /* Skeleton */
+  .skeleton {
+    @apply bg-surface animate-pulse;
+    background: linear-gradient(90deg, #1A1A1A 25%, #242424 50%, #1A1A1A 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  /* Divider */
+  .divider { @apply border-border; }
+
+  /* Badge */
+  .badge-gold {
+    @apply inline-block px-3 py-1 bg-gold text-black text-xs font-bold uppercase tracking-widest;
+  }
+  .badge-new {
+    @apply inline-block px-3 py-1 bg-white text-black text-xs font-bold uppercase tracking-widest;
+  }
+
+  /* Status badges */
+  .status-awaiting { @apply text-yellow-400 bg-yellow-400/10 px-2 py-1 text-xs font-medium rounded; }
+  .status-confirmed { @apply text-green-400 bg-green-400/10 px-2 py-1 text-xs font-medium rounded; }
+  .status-failed { @apply text-red-400 bg-red-400/10 px-2 py-1 text-xs font-medium rounded; }
+  .status-processing { @apply text-blue-400 bg-blue-400/10 px-2 py-1 text-xs font-medium rounded; }
+  .status-shipped { @apply text-purple-400 bg-purple-400/10 px-2 py-1 text-xs font-medium rounded; }
+  .status-delivered { @apply text-emerald-400 bg-emerald-400/10 px-2 py-1 text-xs font-medium rounded; }
+  .status-cancelled { @apply text-gray-400 bg-gray-400/10 px-2 py-1 text-xs font-medium rounded; }
+}
+
+/* ── Utilities ── */
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  .border-gold { border-color: var(--gold); }
+
+  .glass {
+    backdrop-filter: blur(12px);
+    background: rgba(17, 17, 17, 0.85);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .gradient-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 60%);
+  }
+
+  /* Product card image zoom */
+  .img-zoom { @apply overflow-hidden; }
+  .img-zoom img { @apply transition-transform duration-700 ease-out; }
+  .img-zoom:hover img { @apply scale-105; }
+}
