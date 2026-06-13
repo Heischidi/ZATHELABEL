@@ -14,5 +14,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Run migrations and start server
-CMD ["sh", "-c", "alembic upgrade head && python seed.py && uvicorn app.main:app --host 0.0.0.0 --port 8000"]
+# Run migrations, seed (non-fatal), then start server
+CMD ["sh", "-c", "alembic upgrade head && (python seed.py || echo '⚠️  Seed failed, continuing...') && uvicorn app.main:app --host 0.0.0.0 --port 8000"]

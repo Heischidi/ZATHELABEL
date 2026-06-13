@@ -11,11 +11,9 @@ import sys
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from app.database import SessionLocal, engine, Base
+from app.database import SessionLocal
 from app.models import *  # noqa
 from app.utils.auth import hash_password
-
-Base.metadata.create_all(bind=engine)
 
 db = SessionLocal()
 
