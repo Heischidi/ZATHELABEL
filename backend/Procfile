@@ -1,0 +1,1 @@
+web: alembic upgrade head && (python seed.py 2>&1 || echo 'Seed failed, continuing...') && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}
