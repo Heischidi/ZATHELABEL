@@ -4,9 +4,6 @@ from app.config import get_settings
 from app.routers import auth, users, products, categories, cart, wishlist, orders, upload
 from app.routers.admin import dashboard, products as admin_products, orders as admin_orders
 from app.routers.admin import customers, delivery, settings as admin_settings
-from app.database import SessionLocal
-from app.models.user import User
-from app.utils.auth import hash_password
 
 settings = get_settings()
 
@@ -56,6 +53,10 @@ def health_check():
 @app.get("/api/setup-admin")
 def setup_admin(token: str = Query(...)):
     """One-time endpoint to create admin user. Protected by SECRET_KEY."""
+    from app.database import SessionLocal
+    from app.models.user import User
+    from app.utils.auth import hash_password
+
     if token != settings.secret_key:
         raise HTTPException(status_code=403, detail="Forbidden")
     db = SessionLocal()
