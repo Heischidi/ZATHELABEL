@@ -1,9 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import get_settings
 from app.routers import auth, users, products, categories, cart, wishlist, orders, upload
 from app.routers.admin import dashboard, products as admin_products, orders as admin_orders
 from app.routers.admin import customers, delivery, settings as admin_settings
+from app.database import SessionLocal
+from app.models.user import User
+from app.utils.auth import hash_password
 
 settings = get_settings()
 
@@ -47,3 +50,28 @@ app.include_router(admin_settings.router)
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "service": "ZA Fashion API"}
+
+
+# ── TEMPORARY SETUP ENDPOINT — remove after first use ──
+@app.get("/api/setup-admin")
+def setup_admin(token: str = Query(...)):
+    """One-time endpoint to create admin user. Protected by SECRET_KEY."""
+    if token != settings.secret_key:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    db = SessionLocal()
+    try:
+        existing = db.query(User).filter(User.email == "admin@za.com").first()
+        if existing:
+            return {"status": "exists", "email": existing.email, "is_admin": existing.is_admin}
+        admin = User(
+            email="admin@za.com",
+            password_hash=hash_password("admin123"),
+            full_name="ZA Admin",
+            is_admin=True,
+            is_active=True,
+        )
+        db.add(admin)
+        db.commit()
+        return {"status": "created", "email": "admin@za.com", "password": "admin123"}
+    finally:
+        db.close()
