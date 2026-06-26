@@ -41,7 +41,7 @@ export default function NewProductPage() {
 
   const { data: categories } = useQuery<Category[]>({
     queryKey: ["categories"],
-    queryFn: () => api.get("/api/categories").then((r) => r.data),
+    queryFn: () => api.get("/api/categories/").then((r) => r.data),
   });
 
   const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm<FormData>({

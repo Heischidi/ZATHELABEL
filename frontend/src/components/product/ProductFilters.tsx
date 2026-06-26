@@ -13,7 +13,7 @@ interface ProductFiltersProps {
 export default function ProductFilters({ open, category, onCategoryChange }: ProductFiltersProps) {
   const { data: categories } = useQuery<Category[]>({
     queryKey: ["categories"],
-    queryFn: () => api.get("/api/categories").then((r) => r.data),
+    queryFn: () => api.get("/api/categories/").then((r) => r.data),
   });
 
   if (!open) return null;
