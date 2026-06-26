@@ -1,6 +1,11 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// Auto-upgrade http → https when running on a secure page to prevent mixed content errors.
+// This is a safeguard in case NEXT_PUBLIC_API_URL is accidentally set with http:// in production.
+let API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+if (typeof window !== "undefined" && window.location.protocol === "https:" && API_URL.startsWith("http://")) {
+  API_URL = API_URL.replace("http://", "https://");
+}
 
 export const api = axios.create({
   baseURL: API_URL,
