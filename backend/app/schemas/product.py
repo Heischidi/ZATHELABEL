@@ -55,6 +55,7 @@ class ProductBase(BaseModel):
     sizes: list[str] = []
     colors: list[dict[str, Any]] = []
     stock_quantity: int = 0
+    instagram_url: str | None = None
     is_featured: bool = False
     is_new_arrival: bool = False
     is_best_seller: bool = False
@@ -75,6 +76,7 @@ class ProductUpdate(BaseModel):
     sizes: list[str] | None = None
     colors: list[dict[str, Any]] | None = None
     stock_quantity: int | None = None
+    instagram_url: str | None = None
     is_featured: bool | None = None
     is_new_arrival: bool | None = None
     is_best_seller: bool | None = None

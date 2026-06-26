@@ -13,8 +13,9 @@ interface MobileMenuProps {
 
 const links = [
   { label: "All Products", href: "/products" },
-  { label: "Men's Collection", href: "/collections/men" },
-  { label: "Women's Collection", href: "/collections/women" },
+  { label: "Dresses", href: "/collections/dresses" },
+  { label: "Tops & Blouses", href: "/collections/tops" },
+  { label: "Bottoms", href: "/collections/bottoms" },
   { label: "Accessories", href: "/collections/accessories" },
   { label: "Outerwear", href: "/collections/outerwear" },
   { label: "New Arrivals", href: "/products?sort=newest" },

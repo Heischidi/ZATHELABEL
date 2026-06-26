@@ -45,6 +45,7 @@ export interface Product {
   sizes: string[];
   colors: ProductColor[];
   stock_quantity: number;
+  instagram_url?: string;
   is_featured: boolean;
   is_new_arrival: boolean;
   is_best_seller: boolean;

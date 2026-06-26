@@ -8,7 +8,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/api";
 import { Category, Product } from "@/types";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Plus, X, Upload, Loader2 } from "lucide-react";
+import { ArrowLeft, Plus, X, Upload, Loader2, Instagram } from "lucide-react";
 import toast from "react-hot-toast";
 
 const schema = z.object({
@@ -19,6 +19,7 @@ const schema = z.object({
   discount_price: z.number().optional(),
   category_id: z.number().optional(),
   stock_quantity: z.number().min(0).default(0),
+  instagram_url: z.string().url("Must be a valid URL").optional().or(z.literal("")),
   is_featured: z.boolean().default(false),
   is_new_arrival: z.boolean().default(false),
   is_best_seller: z.boolean().default(false),
@@ -64,6 +65,7 @@ export default function EditProductPage() {
         discount_price: product.discount_price,
         category_id: product.category_id || undefined,
         stock_quantity: product.stock_quantity,
+        instagram_url: product.instagram_url || "",
         is_featured: product.is_featured,
         is_new_arrival: product.is_new_arrival,
         is_best_seller: product.is_best_seller,
@@ -82,6 +84,7 @@ export default function EditProductPage() {
         ...data,
         sizes,
         colors,
+        instagram_url: data.instagram_url || null,
       });
 
       // 2. Identify new images to add
@@ -286,38 +289,58 @@ export default function EditProductPage() {
 
         {/* Images */}
         <div className="card-dark p-6">
-          <h2 className="font-semibold mb-4">Product Images</h2>
-          <label className="block cursor-pointer">
-            <div className="border-2 border-dashed border-border hover:border-gold transition-colors p-8 text-center">
-              {uploading ? (
-                <Loader2 className="w-8 h-8 text-gold mx-auto animate-spin" />
-              ) : (
-                <>
-                  <Upload className="w-8 h-8 text-text-secondary mx-auto mb-2" />
-                  <p className="text-sm text-text-secondary">Click to upload images (JPEG, PNG, WebP)</p>
-                  <p className="text-xs text-text-secondary mt-1">First image will be the primary image</p>
-                </>
-              )}
-            </div>
-            <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} />
-          </label>
-          {uploadedImages.length > 0 && (
-            <div className="grid grid-cols-4 gap-2 mt-3">
-              {uploadedImages.map((img, i) => (
-                <div key={i} className="relative aspect-square">
-                  <img src={img.image_url} alt="" className="w-full h-full object-cover" />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(img, i)}
-                    className="absolute top-1 right-1 w-5 h-5 bg-black/70 text-white flex items-center justify-center"
-                  >
-                    <X className="w-3 h-3" />
-                  </button>
-                  {img.is_primary && <div className="absolute bottom-1 left-1 text-[9px] bg-gold text-black px-1">PRIMARY</div>}
-                </div>
-              ))}
-            </div>
-          )}
+          <h2 className="font-semibold mb-1">Product Images</h2>
+          <p className="text-xs text-text-secondary mb-4">Upload images directly, or paste an Instagram post URL below. If both are provided, uploaded images take priority.</p>
+
+          {/* Instagram URL */}
+          <div className="mb-5">
+            <label className="block text-xs font-bold tracking-widest uppercase mb-2 flex items-center gap-2">
+              <Instagram className="w-3.5 h-3.5 text-gold" />
+              Instagram Post URL
+            </label>
+            <input
+              {...register("instagram_url")}
+              className="input-dark"
+              placeholder="https://www.instagram.com/p/ABC123/"
+            />
+            {errors.instagram_url && <p className="text-error text-xs mt-1">{errors.instagram_url.message}</p>}
+            <p className="text-xs text-text-secondary mt-1.5">Paste a link to an Instagram post. The post image/video will be shown on the site.</p>
+          </div>
+
+          <div className="border-t border-border pt-4">
+            <p className="text-xs font-bold tracking-widest uppercase mb-3">Or Upload Images</p>
+            <label className="block cursor-pointer">
+              <div className="border-2 border-dashed border-border hover:border-gold transition-colors p-8 text-center">
+                {uploading ? (
+                  <Loader2 className="w-8 h-8 text-gold mx-auto animate-spin" />
+                ) : (
+                  <>
+                    <Upload className="w-8 h-8 text-text-secondary mx-auto mb-2" />
+                    <p className="text-sm text-text-secondary">Click to upload images (JPEG, PNG, WebP)</p>
+                    <p className="text-xs text-text-secondary mt-1">First image will be the primary image</p>
+                  </>
+                )}
+              </div>
+              <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} />
+            </label>
+            {uploadedImages.length > 0 && (
+              <div className="grid grid-cols-4 gap-2 mt-3">
+                {uploadedImages.map((img, i) => (
+                  <div key={i} className="relative aspect-square">
+                    <img src={img.image_url} alt="" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(img, i)}
+                      className="absolute top-1 right-1 w-5 h-5 bg-black/70 text-white flex items-center justify-center"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                    {img.is_primary && <div className="absolute bottom-1 left-1 text-[9px] bg-gold text-black px-1">PRIMARY</div>}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Flags */}

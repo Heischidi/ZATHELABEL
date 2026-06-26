@@ -35,6 +35,7 @@ class Product(Base):
     sizes = Column(JSON, default=list)       # ["XS","S","M","L","XL","XXL"]
     colors = Column(JSON, default=list)      # [{"name":"Black","hex":"#000000"}]
     stock_quantity = Column(Integer, default=0)
+    instagram_url = Column(String(500), nullable=True)  # Instagram post URL for product image
     is_featured = Column(Boolean, default=False)
     is_new_arrival = Column(Boolean, default=False)
     is_best_seller = Column(Boolean, default=False)

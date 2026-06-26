@@ -19,8 +19,9 @@ const navLinks = [
     href: "/products",
     children: [
       { label: "All Products", href: "/products" },
-      { label: "Men", href: "/collections/men" },
-      { label: "Women", href: "/collections/women" },
+      { label: "Dresses", href: "/collections/dresses" },
+      { label: "Tops & Blouses", href: "/collections/tops" },
+      { label: "Bottoms", href: "/collections/bottoms" },
       { label: "Accessories", href: "/collections/accessories" },
       { label: "Outerwear", href: "/collections/outerwear" },
     ],
@@ -139,11 +140,6 @@ export default function Navbar({ onCartOpen }: NavbarProps) {
                     <Link href="/dashboard/wishlist" className="block px-4 py-2.5 text-sm text-text-secondary hover:text-white hover:bg-surface transition-colors">
                       Wishlist
                     </Link>
-                    {user.is_admin && (
-                      <Link href="/admin" className="block px-4 py-2.5 text-sm text-gold hover:bg-surface transition-colors">
-                        Admin Dashboard
-                      </Link>
-                    )}
                     <hr className="my-1 border-border" />
                     <button
                       onClick={logout}

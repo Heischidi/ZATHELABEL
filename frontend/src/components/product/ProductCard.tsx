@@ -9,6 +9,7 @@ import { formatPrice, getProductPrimaryImage } from "@/lib/utils";
 import { useCart } from "@/hooks/useCart";
 import { useWishlist } from "@/hooks/useWishlist";
 import { cn } from "@/lib/utils";
+import InstagramEmbed from "./InstagramEmbed";
 
 interface ProductCardProps {
   product: Product;
@@ -23,6 +24,8 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const secondaryImg = product.images[1]?.image_url;
   const price = product.discount_price ?? product.price;
   const hasDiscount = !!product.discount_price;
+  const hasImages = product.images.length > 0;
+  const useInstagram = !hasImages && !!product.instagram_url;
 
   return (
     <motion.article
@@ -34,25 +37,33 @@ export default function ProductCard({ product, className }: ProductCardProps) {
     >
       {/* Image container */}
       <div className="relative aspect-[3/4] overflow-hidden bg-surface">
-        <Link href={`/products/${product.slug}`}>
-          <Image
-            src={primaryImg}
-            alt={product.name}
-            fill
-            className={cn(
-              "object-cover transition-all duration-700 ease-out",
-              secondaryImg ? "group-hover:opacity-0" : "group-hover:scale-105"
-            )}
+        {useInstagram ? (
+          <InstagramEmbed
+            instagramUrl={product.instagram_url!}
+            productSlug={product.slug}
+            productName={product.name}
           />
-          {secondaryImg && (
+        ) : (
+          <Link href={`/products/${product.slug}`}>
             <Image
-              src={secondaryImg}
-              alt={`${product.name} alternate`}
+              src={primaryImg}
+              alt={product.name}
               fill
-              className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out scale-105"
+              className={cn(
+                "object-cover transition-all duration-700 ease-out",
+                secondaryImg ? "group-hover:opacity-0" : "group-hover:scale-105"
+              )}
             />
-          )}
-        </Link>
+            {secondaryImg && (
+              <Image
+                src={secondaryImg}
+                alt={`${product.name} alternate`}
+                fill
+                className="object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out scale-105"
+              />
+            )}
+          </Link>
+        )}
 
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">

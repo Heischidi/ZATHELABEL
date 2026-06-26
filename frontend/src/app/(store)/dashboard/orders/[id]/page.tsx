@@ -97,7 +97,7 @@ export default function OrderDetailPage() {
               href={`https://wa.me/2348000000000?text=${encodeURIComponent(`Hello ZA Team,\n\nI would like to make payment for my order.\n\nOrder Number: ${order.order_number}\nCustomer Name: ${order.full_name}\nTotal Amount: ₦${order.total_amount.toLocaleString()}\n\nPlease send payment details.\n\nThank you.`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-gold w-full text-center block py-3 flex items-center justify-center gap-2"
+              className="btn-gold w-full text-center py-3 flex items-center justify-center gap-2"
             >
               <MessageCircle className="w-4 h-4" />
               Pay via WhatsApp

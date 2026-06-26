@@ -89,8 +89,8 @@ export default function HeroBanner() {
               <Link href="/products" className="btn-gold px-8 py-4 text-base">
                 Shop Collection
               </Link>
-              <Link href="/collections/men" className="btn-outline px-8 py-4 text-base flex items-center gap-2">
-                Men's Looks
+              <Link href="/products?sort=newest&featured=true" className="btn-outline px-8 py-4 text-base flex items-center gap-2">
+                New Arrivals
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </motion.div>

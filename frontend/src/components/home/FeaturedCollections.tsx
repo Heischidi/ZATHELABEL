@@ -6,25 +6,28 @@ import { motion } from "framer-motion";
 
 const collections = [
   {
-    title: "Men's Collection",
-    subtitle: "Power Dressing Redefined",
-    href: "/collections/men",
+    title: "Dresses",
+    subtitle: "From day to night, draped in elegance",
+    href: "/collections/dresses",
     gradient: "from-[#1B2016] to-[#0B0D09]",
     accent: "#7E8F6A",
+    tag: "Dresses",
   },
   {
-    title: "Women's Collection",
-    subtitle: "Effortless Elegance",
-    href: "/collections/women",
+    title: "Tops & Blouses",
+    subtitle: "Effortless femininity, every detail",
+    href: "/collections/tops",
     gradient: "from-[#222A1E] to-[#0B0D09]",
     accent: "#9BB083",
+    tag: "Tops",
   },
   {
     title: "Accessories",
-    subtitle: "The Finishing Touch",
+    subtitle: "The finishing touch to every look",
     href: "/collections/accessories",
     gradient: "from-[#131710] to-[#0B0D09]",
     accent: "#7E8F6A",
+    tag: "Acc.",
   },
 ];
 
@@ -65,7 +68,7 @@ export default function FeaturedCollections() {
                 <div className="absolute inset-0 flex flex-col justify-end p-8">
                   <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <p className="text-xs tracking-[0.3em] uppercase mb-2" style={{ color: col.accent }}>
-                      ZA {["Men", "Women", "Acc."][i]}
+                      ZA {col.tag}
                     </p>
                     <h3 className="font-display text-2xl font-bold text-white mb-1">{col.title}</h3>
                     <p className="text-text-secondary text-sm mb-4">{col.subtitle}</p>
