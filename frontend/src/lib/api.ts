@@ -1,6 +1,10 @@
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+// NEXT_PUBLIC_API_URL is substituted at BUILD time by Next.js.
+// We force https:// for any non-localhost URL to prevent mixed content errors
+// when the frontend is served over HTTPS (e.g. Vercel).
+const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const BASE_URL = rawApiUrl.replace(/^http:\/\/(?!localhost)/, "https://");
 
 export const api = axios.create({
   baseURL: BASE_URL,
@@ -8,22 +12,9 @@ export const api = axios.create({
 });
 
 // ── Request interceptor ──────────────────────────────────────────────────────
-// Runs in the BROWSER at request time — guaranteed to have window available.
-// 1. Upgrades http → https to prevent mixed content errors on HTTPS pages.
-// 2. Attaches the auth token to every request.
+// Attaches the auth bearer token to every outgoing request.
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
-    // Force https when page is served over https
-    if (window.location.protocol === "https:") {
-      if (config.baseURL?.startsWith("http://")) {
-        config.baseURL = config.baseURL.replace("http://", "https://");
-      }
-      if (typeof config.url === "string" && config.url.startsWith("http://")) {
-        config.url = config.url.replace("http://", "https://");
-      }
-    }
-
-    // Attach bearer token
     const token = localStorage.getItem("za_access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -42,10 +33,7 @@ api.interceptors.response.use(
       try {
         const refresh = localStorage.getItem("za_refresh_token");
         if (refresh) {
-          // Use the already-upgraded baseURL for the refresh call
-          const baseUrl = original.baseURL || BASE_URL;
-          const httpsBase = baseUrl.startsWith("http://") ? baseUrl.replace("http://", "https://") : baseUrl;
-          const { data } = await axios.post(`${httpsBase}/api/auth/refresh`, {
+          const { data } = await axios.post(`${BASE_URL}/api/auth/refresh`, {
             refresh_token: refresh,
           });
           localStorage.setItem("za_access_token", data.access_token);
