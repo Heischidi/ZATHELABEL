@@ -44,6 +44,19 @@ app.include_router(delivery.router)
 app.include_router(admin_settings.router)
 
 
+from fastapi import Request
+from fastapi.responses import JSONResponse
+import traceback
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    print(f"Global exception caught: {exc}")
+    traceback.print_exc()
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc), "type": str(type(exc))}
+    )
+
 @app.get("/api/health")
 def health_check():
     return {"status": "ok", "service": "ZA Fashion API"}
