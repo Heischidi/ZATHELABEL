@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// NEXT_PUBLIC_API_URL is substituted at BUILD time by Next.js.
-// We force https:// for any non-localhost URL to prevent mixed content errors
-// when the frontend is served over HTTPS (e.g. Vercel).
-const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-const BASE_URL = rawApiUrl.replace(/^http:\/\/(?!localhost)/, "https://");
+// Hardcode the production URL with https:// to completely bypass any Vercel environment variable issues.
+const isProd = process.env.NODE_ENV === "production";
+const BASE_URL = isProd 
+  ? "https://zathelabel-production.up.railway.app" 
+  : "http://localhost:8000";
 
 export const api = axios.create({
   baseURL: BASE_URL,
