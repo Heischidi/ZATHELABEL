@@ -13,7 +13,18 @@ export const api = axios.create({
 
 // ── Request interceptor ──────────────────────────────────────────────────────
 // Attaches the auth bearer token to every outgoing request.
+// Also ensures the URL has a trailing slash to prevent FastAPI from issuing a 307 Redirect to HTTP.
 api.interceptors.request.use((config) => {
+  // Ensure trailing slash to avoid 307 redirects (unless there's a query string or it's a file)
+  if (config.url && !config.url.includes("?") && !config.url.endsWith("/")) {
+    config.url = `${config.url}/`;
+  } else if (config.url && config.url.includes("?")) {
+    const [path, query] = config.url.split("?");
+    if (!path.endsWith("/")) {
+      config.url = `${path}/?${query}`;
+    }
+  }
+
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("za_access_token");
     if (token) {

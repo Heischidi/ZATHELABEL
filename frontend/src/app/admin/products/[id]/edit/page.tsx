@@ -294,7 +294,7 @@ export default function EditProductPage() {
 
           {/* Instagram URL */}
           <div className="mb-5">
-            <label className="block text-xs font-bold tracking-widest uppercase mb-2 flex items-center gap-2">
+            <label className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase mb-2">
               <Instagram className="w-3.5 h-3.5 text-gold" />
               Instagram Post URL
             </label>
