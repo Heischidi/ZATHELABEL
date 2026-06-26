@@ -1,20 +1,29 @@
 import axios from "axios";
 
-// Auto-upgrade http → https when running on a secure page to prevent mixed content errors.
-// This is a safeguard in case NEXT_PUBLIC_API_URL is accidentally set with http:// in production.
-let API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-if (typeof window !== "undefined" && window.location.protocol === "https:" && API_URL.startsWith("http://")) {
-  API_URL = API_URL.replace("http://", "https://");
-}
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export const api = axios.create({
-  baseURL: API_URL,
+  baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
 });
 
-// Attach token to every request
+// ── Request interceptor ──────────────────────────────────────────────────────
+// Runs in the BROWSER at request time — guaranteed to have window available.
+// 1. Upgrades http → https to prevent mixed content errors on HTTPS pages.
+// 2. Attaches the auth token to every request.
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
+    // Force https when page is served over https
+    if (window.location.protocol === "https:") {
+      if (config.baseURL?.startsWith("http://")) {
+        config.baseURL = config.baseURL.replace("http://", "https://");
+      }
+      if (typeof config.url === "string" && config.url.startsWith("http://")) {
+        config.url = config.url.replace("http://", "https://");
+      }
+    }
+
+    // Attach bearer token
     const token = localStorage.getItem("za_access_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
@@ -23,7 +32,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Auto-refresh on 401
+// ── Response interceptor — auto-refresh on 401 ───────────────────────────────
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -33,7 +42,10 @@ api.interceptors.response.use(
       try {
         const refresh = localStorage.getItem("za_refresh_token");
         if (refresh) {
-          const { data } = await axios.post(`${API_URL}/api/auth/refresh`, {
+          // Use the already-upgraded baseURL for the refresh call
+          const baseUrl = original.baseURL || BASE_URL;
+          const httpsBase = baseUrl.startsWith("http://") ? baseUrl.replace("http://", "https://") : baseUrl;
+          const { data } = await axios.post(`${httpsBase}/api/auth/refresh`, {
             refresh_token: refresh,
           });
           localStorage.setItem("za_access_token", data.access_token);
