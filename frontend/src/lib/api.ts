@@ -1,10 +1,7 @@
 import axios from "axios";
 
-// Hardcode the production URL with https:// to completely bypass any Vercel environment variable issues.
-const isProd = process.env.NODE_ENV === "production";
-const BASE_URL = isProd 
-  ? "https://zathelabel-production.up.railway.app" 
-  : "http://localhost:8000";
+// Use the NEXT_PUBLIC_API_URL environment variable set in Vercel
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export const api = axios.create({
   baseURL: BASE_URL,
