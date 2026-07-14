@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Product } from "@/types";
 import ProductCard from "@/components/product/ProductCard";
 import Link from "next/link";
@@ -22,6 +22,29 @@ export default function ProductGrid({
   viewAllLabel = "View All",
 }: ProductGridProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    if (products.length <= 1 || isHovered) return;
+
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+        // Check if we are near the end of the scrollable area
+        const isEnd = scrollLeft + clientWidth >= scrollWidth - 20;
+
+        if (isEnd) {
+          // Smoothly scroll back to the beginning
+          scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          // Scroll right by approximately one item width (approx 300px)
+          scrollRef.current.scrollTo({ left: scrollLeft + 320, behavior: "smooth" });
+        }
+      }
+    }, 3500); // Slide every 3.5 seconds
+
+    return () => clearInterval(interval);
+  }, [products.length, isHovered]);
 
   if (products.length === 0) return null;
 
@@ -87,6 +110,10 @@ export default function ProductGrid({
         <div className="relative">
           <div
             ref={scrollRef}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            onTouchStart={() => setIsHovered(true)}
+            onTouchEnd={() => setIsHovered(false)}
             className="flex gap-4 md:gap-6 overflow-x-auto scroll-smooth scrollbar-none snap-x snap-mandatory pb-4"
             style={{ WebkitOverflowScrolling: "touch" }}
           >
