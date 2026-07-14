@@ -18,6 +18,7 @@ const SETTINGS_SCHEMA = [
   { key: "contact_email", label: "Contact Email", type: "email" },
   { key: "contact_phone", label: "Contact Phone", type: "text" },
   { key: "contact_address", label: "Contact Address", type: "text" },
+  { key: "homepage_bg_url", label: "Homepage Background Image URL (Instagram or Image Link)", type: "text", placeholder: "https://example.com/image.jpg" },
   { key: "meta_description", label: "Meta Description (SEO)", type: "textarea" },
   { key: "social_links", label: "Social Links (JSON)", type: "textarea", placeholder: '{"instagram":"","twitter":"","facebook":""}' },
 ];

@@ -11,7 +11,7 @@ router = APIRouter(prefix="/api/admin/settings", tags=["admin-settings"])
 DEFAULT_KEYS = [
     "brand_name", "logo_url", "whatsapp_number", "delivery_fee",
     "hero_banners", "social_links", "contact_email", "contact_phone",
-    "contact_address", "meta_description",
+    "contact_address", "meta_description", "homepage_bg_url",
 ]
 
 

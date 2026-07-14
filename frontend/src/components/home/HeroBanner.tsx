@@ -3,42 +3,53 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-
-const banners = [
-  {
-    title: "New Season",
-    subtitle: "Arrivals",
-    description: "Redefine your style with our latest drops. Premium streetwear crafted for the bold.",
-    cta: "Shop Now",
-    link: "/products",
-    gradient: "from-black via-black/80 to-transparent",
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import api from "@/lib/api";
 
 export default function HeroBanner() {
+  const { data: settings } = useQuery<Record<string, string>>({
+    queryKey: ["public-settings"],
+    queryFn: () => api.get("/api/admin/settings/public").then((r) => r.data),
+  });
+
+  const bgUrl = settings?.homepage_bg_url;
+
   return (
     <section className="relative w-full h-screen min-h-[600px] overflow-hidden">
-      {/* Background — deep gradient with abstract pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0B0D09] via-[#0E110C] to-[#151B11]">
-        {/* Decorative elements */}
-        <div className="absolute inset-0 opacity-25"
-          style={{
-            backgroundImage: `radial-gradient(circle at 20% 50%, #7E8F6A 0%, transparent 50%),
-                              radial-gradient(circle at 80% 20%, #7E8F6A 0%, transparent 40%)`,
-          }}
-        />
-        <div className="absolute inset-0"
-          style={{
-            backgroundImage: `repeating-linear-gradient(
-              45deg,
-              transparent,
-              transparent 40px,
-              rgba(126,143,106,0.03) 40px,
-              rgba(126,143,106,0.03) 80px
-            )`,
-          }}
-        />
-      </div>
+      {/* Background image or gradient */}
+      {bgUrl ? (
+        <div className="absolute inset-0 bg-[#0B0D09]">
+          <img
+            src={bgUrl}
+            alt="ZA Background"
+            className="w-full h-full object-cover object-center opacity-40 transition-opacity duration-1000"
+          />
+          {/* Readability overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B0D09] via-transparent to-black/50" />
+          <div className="absolute inset-0 bg-black/40" />
+        </div>
+      ) : (
+        <div className="absolute inset-0 bg-gradient-to-br from-[#0B0D09] via-[#0E110C] to-[#151B11]">
+          {/* Decorative elements */}
+          <div className="absolute inset-0 opacity-25"
+            style={{
+              backgroundImage: `radial-gradient(circle at 20% 50%, #7E8F6A 0%, transparent 50%),
+                                radial-gradient(circle at 80% 20%, #7E8F6A 0%, transparent 40%)`,
+            }}
+          />
+          <div className="absolute inset-0"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 40px,
+                rgba(126,143,106,0.03) 40px,
+                rgba(126,143,106,0.03) 80px
+              )`,
+            }}
+          />
+        </div>
+      )}
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center">
