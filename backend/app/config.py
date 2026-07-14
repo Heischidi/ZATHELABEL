@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:3000"
 
     # WhatsApp
-    whatsapp_number: str = "2348000000000"
+    whatsapp_number: str = "2349055576563"
 
     class Config:
         env_file = ".env"

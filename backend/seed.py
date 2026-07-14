@@ -172,10 +172,10 @@ for prod_data in products_data:
 # ─────────────── Site Settings ───────────────
 default_settings = {
     "brand_name": "ZA",
-    "whatsapp_number": "2348000000000",
+    "whatsapp_number": "2349055576563",
     "delivery_fee": "3500",
     "contact_email": "hello@za.store",
-    "contact_phone": "+234 800 000 0000",
+    "contact_phone": "+234 905 557 6563",
     "contact_address": "Lagos, Nigeria",
     "meta_description": "ZA — Premium streetwear and fashion for the bold.",
     "hero_banners": '[{"title":"New Season Arrivals","subtitle":"Redefine Your Style","image":"","cta":"Shop Now","link":"/products"}]',
