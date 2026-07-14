@@ -8,6 +8,12 @@ Run: python seed.py
 """
 import os
 import sys
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env from the ZA root (one level up from backend/)
+env_path = Path(__file__).parent.parent / ".env"
+load_dotenv(dotenv_path=env_path, override=True)
 
 sys.path.insert(0, os.path.dirname(__file__))
 
@@ -17,7 +23,7 @@ from app.utils.auth import hash_password
 
 db = SessionLocal()
 
-# ─────────────── Admin User ───────────────
+# Admin User
 if not db.query(User).filter(User.email == "admin@za.com").first():
     admin = User(
         email="admin@za.com",
@@ -28,9 +34,9 @@ if not db.query(User).filter(User.email == "admin@za.com").first():
     )
     db.add(admin)
     db.commit()
-    print("✅ Admin user created: admin@za.com / admin123")
+    print("Admin user created: admin@za.com / admin123")
 else:
-    print("ℹ️  Admin user already exists")
+    print("Admin user already exists")
 
 # ─────────────── Categories ───────────────
 categories_data = [
@@ -50,7 +56,7 @@ for cat_data in categories_data:
         db.commit()
         db.refresh(cat)
         cat_map[cat_data["slug"]] = cat.id
-        print(f"✅ Category created: {cat_data['name']}")
+        print(f"Category created: {cat_data['name']}")
     else:
         cat_map[cat_data["slug"]] = existing.id
 
@@ -161,7 +167,7 @@ for prod_data in products_data:
         product = Product(**prod_data)
         db.add(product)
         db.commit()
-        print(f"✅ Product created: {prod_data['name']}")
+        print(f"Product created: {prod_data['name']}")
 
 # ─────────────── Site Settings ───────────────
 default_settings = {
@@ -181,6 +187,6 @@ for key, value in default_settings.items():
         db.add(SiteSetting(key=key, value=value))
 
 db.commit()
-print("✅ Site settings initialized")
+print("Site settings initialized")
 db.close()
-print("\n🎉 Seed complete! ZA database is ready.")
+print("\nSeed complete! ZA database is ready.")

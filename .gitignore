@@ -126,3 +126,6 @@ frontend/.env.local
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Alembic config (contains DB password when running migrations)
+backend/alembic.ini
