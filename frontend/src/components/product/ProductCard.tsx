@@ -22,8 +22,8 @@ export default function ProductCard({ product, className }: ProductCardProps) {
   const inWishlist = isInWishlist(product.id);
   const primaryImg = getProductPrimaryImage(product.images);
   const secondaryImg = product.images[1]?.image_url;
-  const price = product.discount_price ?? product.price;
-  const hasDiscount = !!product.discount_price;
+  const price = (product.discount_price && product.discount_price > 0) ? product.discount_price : product.price;
+  const hasDiscount = !!(product.discount_price && product.discount_price > 0);
   const hasImages = product.images.length > 0;
   const useInstagram = !hasImages && !!product.instagram_url;
 

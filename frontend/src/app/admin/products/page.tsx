@@ -91,7 +91,7 @@ export default function AdminProductsPage() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gold">{formatPrice(product.discount_price ?? product.price)}</td>
+                    <td className="px-4 py-3 text-sm text-gold">{formatPrice((product.discount_price && product.discount_price > 0) ? product.discount_price : product.price)}</td>
                     <td className="px-4 py-3 text-sm">
                       <span className={product.stock_quantity < 5 ? "text-red-400" : "text-green-400"}>
                         {product.stock_quantity}

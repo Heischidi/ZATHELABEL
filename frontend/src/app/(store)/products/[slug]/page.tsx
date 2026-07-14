@@ -13,6 +13,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import ProductCard from "@/components/product/ProductCard";
+import InstagramEmbed from "@/components/product/InstagramEmbed";
 import toast from "react-hot-toast";
 
 export default function ProductDetailPage() {
@@ -54,8 +55,10 @@ export default function ProductDetailPage() {
   if (!product) return <div className="pt-20 text-center py-20 text-text-secondary">Product not found.</div>;
 
   const inWishlist = isInWishlist(product.id);
-  const price = product.discount_price ?? product.price;
-  const images = product.images.length > 0
+  const price = (product.discount_price && product.discount_price > 0) ? product.discount_price : product.price;
+  const hasImages = product.images.length > 0;
+  const useInstagram = !hasImages && !!product.instagram_url;
+  const images = hasImages
     ? product.images
     : [{ id: 0, image_url: "/placeholder-product.jpg", is_primary: true, sort_order: 0 }];
 
@@ -86,40 +89,50 @@ export default function ProductDetailPage() {
           <div className="space-y-4">
             {/* Main image */}
             <div className="relative aspect-[4/5] bg-surface overflow-hidden">
-              <motion.div
-                key={activeImage}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="relative w-full h-full"
-              >
-                <Image
-                  src={images[activeImage]?.image_url || "/placeholder-product.jpg"}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
+              {useInstagram ? (
+                <InstagramEmbed
+                  instagramUrl={product.instagram_url!}
+                  productSlug={product.slug}
+                  productName={product.name}
                 />
-              </motion.div>
-              {images.length > 1 && (
+              ) : (
                 <>
-                  <button
-                    onClick={() => setActiveImage((prev) => (prev - 1 + images.length) % images.length)}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black transition-colors"
+                  <motion.div
+                    key={activeImage}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="relative w-full h-full"
                   >
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                  <button
-                    onClick={() => setActiveImage((prev) => (prev + 1) % images.length)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black transition-colors"
-                  >
-                    <ChevronRight className="w-5 h-5" />
-                  </button>
+                    <Image
+                      src={images[activeImage]?.image_url || "/placeholder-product.jpg"}
+                      alt={product.name}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                  </motion.div>
+                  {images.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setActiveImage((prev) => (prev - 1 + images.length) % images.length)}
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black transition-colors"
+                      >
+                        <ChevronLeft className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => setActiveImage((prev) => (prev + 1) % images.length)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 bg-black/50 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black transition-colors"
+                      >
+                        <ChevronRight className="w-5 h-5" />
+                      </button>
+                    </>
+                  )}
                 </>
               )}
             </div>
 
             {/* Thumbnails */}
-            {images.length > 1 && (
+            {!useInstagram && images.length > 1 && (
               <div className="grid grid-cols-5 gap-2">
                 {images.map((img, i) => (
                   <button

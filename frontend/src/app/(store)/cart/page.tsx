@@ -36,7 +36,7 @@ export default function CartPage() {
           {/* Items */}
           <div className="lg:col-span-2 space-y-4">
             {items.map((item, i) => {
-              const price = item.product.discount_price ?? item.product.price;
+              const price = (item.product.discount_price && item.product.discount_price > 0) ? item.product.discount_price : item.product.price;
               const img = getProductPrimaryImage(item.product.images);
               return (
                 <div key={`${item.product.id}-${item.size}-${i}`} className="flex gap-5 p-5 card-dark">

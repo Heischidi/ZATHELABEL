@@ -90,7 +90,10 @@ def admin_create_product(
     db: Session = Depends(get_db),
     _: User = Depends(get_current_admin),
 ):
-    product = Product(**data.model_dump())
+    prod_data = data.model_dump()
+    if prod_data.get("discount_price") is not None and prod_data["discount_price"] <= 0:
+        prod_data["discount_price"] = None
+    product = Product(**prod_data)
     db.add(product)
     db.commit()
     db.refresh(product)
@@ -119,7 +122,13 @@ def admin_update_product(
     product = db.query(Product).filter(Product.id == product_id).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
-    for field, value in data.model_dump(exclude_none=True).items():
+    
+    # Exclude None only for fields other than discount_price, so setting discount_price to None is possible
+    update_data = data.model_dump(exclude_unset=True)
+    if "discount_price" in update_data and (update_data["discount_price"] is None or update_data["discount_price"] <= 0):
+        update_data["discount_price"] = None
+        
+    for field, value in update_data.items():
         setattr(product, field, value)
     db.commit()
     db.refresh(product)

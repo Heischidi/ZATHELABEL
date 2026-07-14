@@ -74,7 +74,7 @@ export const useCartStore = create<CartStore>()(
 
       getSubtotal: () => {
         return get().items.reduce((sum, i) => {
-          const price = i.product.discount_price ?? i.product.price;
+          const price = (i.product.discount_price && i.product.discount_price > 0) ? i.product.discount_price : i.product.price;
           return sum + price * i.quantity;
         }, 0);
       },

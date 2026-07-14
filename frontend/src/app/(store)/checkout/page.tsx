@@ -192,7 +192,7 @@ export default function CheckoutPage() {
                       <div className="flex justify-between mt-1">
                         <p className="text-[10px] text-text-secondary">Qty: {item.quantity}</p>
                         <p className="text-xs text-gold font-semibold">
-                          {formatPrice((item.product.discount_price ?? item.product.price) * item.quantity)}
+                          {formatPrice(((item.product.discount_price && item.product.discount_price > 0) ? item.product.discount_price : item.product.price) * item.quantity)}
                         </p>
                       </div>
                     </div>

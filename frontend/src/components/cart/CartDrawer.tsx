@@ -59,7 +59,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                 </div>
               ) : (
                 items.map((item, i) => {
-                  const price = item.product.discount_price ?? item.product.price;
+                  const price = (item.product.discount_price && item.product.discount_price > 0) ? item.product.discount_price : item.product.price;
                   const img = getProductPrimaryImage(item.product.images);
                   return (
                     <div key={`${item.product.id}-${item.size}-${item.color}-${i}`} className="flex gap-4 py-4 border-b border-border last:border-0">
