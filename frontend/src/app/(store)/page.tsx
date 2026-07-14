@@ -8,6 +8,8 @@ import Newsletter from "@/components/home/Newsletter";
 import api from "@/lib/api";
 import { Product } from "@/types";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "ZA — Premium Streetwear & Fashion",
   description: "Shop ZA's premium streetwear collections. New arrivals, bestsellers, and exclusive drops.",
