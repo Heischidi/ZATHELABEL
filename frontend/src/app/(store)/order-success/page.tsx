@@ -18,8 +18,20 @@ function OrderSuccessContent() {
     const raw = localStorage.getItem("za_last_order");
     if (raw) {
       try {
-        setOrderData(JSON.parse(raw));
-      } catch {}
+        const parsed = JSON.parse(raw) as OrderCreateResponse;
+        setOrderData(parsed);
+        
+        // Automatically redirect to WhatsApp if we haven't already for this session
+        if (parsed.whatsapp_url && !sessionStorage.getItem(`redirected_${parsed.order.order_number}`)) {
+          sessionStorage.setItem(`redirected_${parsed.order.order_number}`, "true");
+          // Small delay to let the user see the "Order Placed" success screen briefly
+          setTimeout(() => {
+            window.location.href = parsed.whatsapp_url;
+          }, 800);
+        }
+      } catch (err) {
+        console.error("Failed to parse last order data", err);
+      }
     }
   }, []);
 
