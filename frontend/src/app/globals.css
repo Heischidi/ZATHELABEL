@@ -131,4 +131,13 @@ h1, h2, h3 {
   .img-zoom { @apply overflow-hidden; }
   .img-zoom img { @apply transition-transform duration-700 ease-out; }
   .img-zoom:hover img { @apply scale-105; }
+
+  /* Hide scrollbar */
+  .scrollbar-none {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari and Opera */
+  }
 }
