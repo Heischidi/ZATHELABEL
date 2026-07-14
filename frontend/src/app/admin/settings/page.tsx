@@ -26,6 +26,7 @@ const SETTINGS_SCHEMA = [
 export default function AdminSettingsPage() {
   const qc = useQueryClient();
   const [values, setValues] = useState<Record<string, string>>({});
+  const [uploadingBg, setUploadingBg] = useState(false);
 
   const { data: settings, isLoading } = useQuery<Setting[]>({
     queryKey: ["admin-settings"],
@@ -39,6 +40,25 @@ export default function AdminSettingsPage() {
       setValues(map);
     }
   }, [settings]);
+
+  const handleBgUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingBg(true);
+    const form = new FormData();
+    form.append("file", file);
+    try {
+      const res = await api.post("/api/upload/image", form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setValues((prev) => ({ ...prev, homepage_bg_url: res.data.url }));
+      toast.success("Background image uploaded!");
+    } catch (err) {
+      toast.error("Failed to upload image");
+    } finally {
+      setUploadingBg(false);
+    }
+  };
 
   const updateMutation = useMutation({
     mutationFn: () => api.put("/api/admin/settings", { settings: values }),
@@ -57,7 +77,45 @@ export default function AdminSettingsPage() {
         {SETTINGS_SCHEMA.map(({ key, label, type, placeholder }) => (
           <div key={key}>
             <label className="block text-xs font-bold tracking-widest uppercase mb-2">{label}</label>
-            {type === "textarea" ? (
+            {key === "homepage_bg_url" ? (
+              <div className="space-y-3">
+                <div className="flex gap-3">
+                  <input
+                    type="text"
+                    value={values[key] || ""}
+                    onChange={(e) => setValues({ ...values, [key]: e.target.value })}
+                    placeholder={placeholder}
+                    className="input-dark flex-1"
+                  />
+                  <label className="btn-outline px-4 py-3 text-xs cursor-pointer flex items-center justify-center gap-2 whitespace-nowrap min-w-[140px]">
+                    {uploadingBg ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      "Upload Photo"
+                    )}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={handleBgUpload}
+                      disabled={uploadingBg}
+                    />
+                  </label>
+                </div>
+                {values[key] && (
+                  <div className="relative w-32 h-20 border border-border overflow-hidden bg-black/40 group">
+                    <img src={values[key]} alt="Preview" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => setValues({ ...values, [key]: "" })}
+                      className="absolute top-1 right-1 bg-red-600/90 text-white rounded-full w-5 h-5 flex items-center justify-center text-[10px] hover:bg-red-700 transition-colors"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : type === "textarea" ? (
               <textarea
                 value={values[key] || ""}
                 onChange={(e) => setValues({ ...values, [key]: e.target.value })}
