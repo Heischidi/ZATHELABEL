@@ -71,11 +71,11 @@ export default function CheckoutPage() {
   const [redirecting, setRedirecting] = useState(false);
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !mutation.isPending && !mutation.isSuccess) {
       setRedirecting(true);
       router.push("/cart");
     }
-  }, [items, router]);
+  }, [items, router, mutation.isPending, mutation.isSuccess]);
 
   if (items.length === 0 || redirecting) {
     return (
